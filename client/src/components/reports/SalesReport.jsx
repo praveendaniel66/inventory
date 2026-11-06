@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Table from '../common/Table';
 import Alert from '../common/Alert';
+import { getSalesOrders } from '../../api/api';
 // Assuming you have an API utility for making requests
 // import { getSalesByDateRange } from '../../api/api';
 
@@ -18,11 +19,18 @@ const SalesReport = () => {
       setLoading(true);
       // Placeholder for an API call to get sales data
       // const response = await getSalesByDateRange(dateRange.startDate, dateRange.endDate);
-      const mockData = [
-        { _id: 'so-1', customerName: 'John Doe', totalAmount: 125.00, date: '2023-01-10' },
-        { _id: 'so-2', customerName: 'Jane Smith', totalAmount: 350.50, date: '2023-01-12' },
-      ];
-      setSales(mockData);
+      const data = await getSalesOrders();
+      const start = dateRange.startDate ? new Date(dateRange.startDate) : null;
+      const end = dateRange.endDate ? new Date(`${dateRange.endDate}T23:59:59`) : null;
+      setSales(data.filter((order) => {
+        const date = new Date(order.createdAt || order.date);
+        return (!start || date >= start) && (!end || date <= end);
+      }).map((order) => ({
+        ...order,
+        customerName: order.customer?.name || order.customer || 'Farm customer',
+        totalAmount: order.totalAmount || order.total || 0,
+        date: new Date(order.createdAt || order.date).toLocaleDateString('en-IN')
+      })));
       setError(null);
     } catch (err) {
       console.error('Error fetching sales report:', err);
@@ -35,6 +43,8 @@ const SalesReport = () => {
   useEffect(() => {
     // Fetch data on initial load
     fetchSalesData();
+    // The report fetch is intentionally triggered once on mount and on explicit filter submission.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDateChange = (e) => {

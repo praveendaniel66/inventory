@@ -28,17 +28,25 @@ const ReportsPage = () => {
       <Header />
       <Sidebar />
       <main className="content-area">
-        <h2 className="page-heading">Business Reports</h2>
-        <div className="report-selector-container">
-          <label htmlFor="report-type">Select Report:</label>
+        <div className="page-intro">
+          <div>
+            <span className="eyebrow">Operational intelligence</span>
+            <h2 className="page-heading">Business Reports</h2>
+            <p className="page-subtitle">Track machinery availability, reorder risk, and farmer orders.</p>
+          </div>
+        </div>
+        <div className="report-shell">
+          <div className="report-selector-container">
+            <label htmlFor="report-type">Report view</label>
           <select id="report-type" className="form-input-select" value={reportType} onChange={handleReportChange}>
             <option value="stock-summary">Stock Summary</option>
             <option value="sales-report">Sales Report</option>
           </select>
-        </div>
+          </div>
 
-        <div className="report-display-area">
-          {renderReport()}
+          <div className="report-display-area">
+            {renderReport()}
+          </div>
         </div>
       </main>
     </div>

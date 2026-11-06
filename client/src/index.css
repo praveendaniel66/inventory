@@ -105,6 +105,15 @@ a { color: inherit; }
 .eyebrow { color: var(--cobalt-dark); font-size: .64rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
 .page-subtitle { margin: 8px 0 0; color: var(--muted); font-size: .74rem; }
 .metric-note { display: block; margin-top: 8px; color: var(--muted); font-size: .64rem; }
+.report-shell { margin: 0 38px; }
+.report-selector-container { display: grid; grid-template-columns: 140px minmax(0, 1fr); align-items: center; gap: 14px; padding: 16px 18px; background: var(--white); border: 1px solid var(--line); border-radius: 10px; }
+.report-selector-container label { color: var(--navy); font-size: .72rem; font-weight: 600; }
+.report-display-area { margin-top: 16px; padding: 20px; background: var(--white); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow); }
+.report-container .section-heading { margin: 0 0 14px; }
+.report-container .table-responsive { width: 100%; margin: 0; box-shadow: none; }
+.report-filter-form { display: flex; align-items: end; gap: 12px; padding: 0 0 18px; }
+.form-group-inline { display: flex; flex-direction: column; gap: 6px; min-width: 150px; }
+.form-group-inline label { color: var(--muted); font-size: .68rem; font-weight: 600; }
 .summary-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; margin: 0 38px 24px; }
 .card, .chart-container, .top-products-container, .product-card, .table-responsive {
   background: var(--white); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
@@ -271,6 +280,10 @@ a { color: inherit; }
   .nav-list { gap: 13px; }
   .page-heading { margin: 25px 18px 18px; font-size: 1.3rem; }
   .page-intro { align-items: flex-start; flex-direction: column; margin: 25px 18px 18px; }
+  .report-shell { margin: 0 18px; }
+  .report-selector-container { grid-template-columns: 1fr; gap: 8px; }
+  .report-display-area { padding: 16px; }
+  .report-filter-form { align-items: stretch; flex-direction: column; }
   .summary-cards, .dashboard-charts, .dashboard-section, .action-bar, .action-buttons, .search-filter-container, .form-section { margin-left: 18px; margin-right: 18px; }
   .summary-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .card { padding: 15px; }

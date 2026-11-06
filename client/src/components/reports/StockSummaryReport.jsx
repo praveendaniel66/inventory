@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Table from '../common/Table';
 import Alert from '../common/Alert';
-// Assuming you have an API utility for making requests
-// import { getProducts } from '../../api/api';
+import { getProducts } from '../../api/api';
 
 const StockSummaryReport = () => {
   const [products, setProducts] = useState([]);
@@ -13,14 +12,12 @@ const StockSummaryReport = () => {
     const fetchStockSummary = async () => {
       try {
         setLoading(true);
-        // Placeholder for an API call to get all products
-        // const response = await getProducts();
-        const mockData = [
-          { _id: '1', name: 'Laptop', sku: 'LAP-001', currentStock: 50, minStock: 10 },
-          { _id: '2', name: 'Mouse', sku: 'MOU-001', currentStock: 250, minStock: 50 },
-          { _id: '3', name: 'Keyboard', sku: 'KEY-001', currentStock: 5, minStock: 20 },
-        ];
-        setProducts(mockData);
+        const data = await getProducts();
+        setProducts(data.map((product) => ({
+          ...product,
+          currentStock: product.quantity,
+          minStock: product.reorderLevel
+        })));
         setError(null);
       } catch (err) {
         console.error('Error fetching stock summary:', err);
