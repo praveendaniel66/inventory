@@ -5,8 +5,7 @@ import Alert from '../components/common/Alert';
 import Table from '../components/common/Table';
 import SalesOrderForm from '../components/sales/SalesOrderForm';
 import Invoice from '../components/sales/Invoice';
-// Assuming you have an API utility for sales data
-// import { getSalesOrders } from '../../api/api'; 
+import { getSalesOrders } from '../api/api';
 
 const SalesManagementPage = () => {
   const [salesOrders, setSalesOrders] = useState([]);
@@ -19,25 +18,8 @@ const SalesManagementPage = () => {
   const fetchSalesOrders = async () => {
     try {
       setLoading(true);
-      // Placeholder for an API call to get all sales orders
-      // const data = await getSalesOrders();
-      const mockData = [
-          { 
-            _id: 'so-101', 
-            customer: { name: 'Customer A' }, 
-            status: 'Shipped', 
-            total: 125.00, 
-            date: new Date().toISOString() 
-          },
-          { 
-            _id: 'so-102', 
-            customer: { name: 'Customer B' }, 
-            status: 'Pending', 
-            total: 350.50, 
-            date: new Date().toISOString() 
-          },
-      ];
-      setSalesOrders(mockData);
+      const data = await getSalesOrders();
+      setSalesOrders(data.map((order) => ({ ...order, customer: { name: order.customer?.name || order.customer || 'Farm customer' }, total: order.total || order.totalAmount || 0 })));
       setError(null);
     } catch (err) {
       console.error('Error fetching sales orders:', err);

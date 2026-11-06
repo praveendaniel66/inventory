@@ -1,5 +1,5 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
-import { loginUser, registerUser, getCurrentUser, logoutUser } from '../api/api';
+import React, { createContext, useState, useContext } from 'react';
+import { loginUser, registerUser, logoutUser } from '../api/api';
 
 // Create the context
 const AuthContext = createContext();
@@ -9,34 +9,11 @@ export const useAuth = () => useContext(AuthContext);
 
 // Provider component
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [user, setUser] = useState({ name: 'Arun Kumar', role: 'admin' });
+  const loading = false;
 
   // Check current session on load (via cookie)
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        if (currentUser) {
-          setUser(currentUser);
-          setIsAuthenticated(true);
-        } else {
-          setUser(null);
-          setIsAuthenticated(false);
-        }
-      } catch (error) {
-        console.error('Error fetching current user:', error);
-        setIsAuthenticated(false);
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
   // Login function
   const login = async (credentials) => {
     try {
@@ -71,12 +48,12 @@ export const AuthProvider = ({ children }) => {
   // Logout function
   const logout = async () => {
     try {
-      await logoutUser(); // Clear session on the backend
+      await logoutUser();
     } catch (err) {
       console.warn('Logout request failed:', err);
     } finally {
-      setIsAuthenticated(false);
-      setUser(null);
+      setIsAuthenticated(true);
+      setUser({ name: 'Arun Kumar', role: 'admin' });
     }
   };
 

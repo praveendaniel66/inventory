@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Alert from '../common/Alert';
 import Modal from '../common/Modal';
+import { createProductVariant, updateProductVariant } from '../../api/api';
 
 const ProductVariantForm = ({ product, variantData = null, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -34,9 +35,11 @@ const ProductVariantForm = ({ product, variantData = null, onClose, onSave }) =>
     }
 
     try {
-      // Placeholder for an API call to save a product variant
-      console.log('Saving variant:', formData);
-      // await saveProductVariant(product._id, formData);
+      if (isEditing) {
+        await updateProductVariant(product._id, variantData._id, formData);
+      } else {
+        await createProductVariant(product._id, formData);
+      }
       onSave();
       onClose();
     } catch (err) {

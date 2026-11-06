@@ -13,17 +13,11 @@ import PurchaseManagementPage from './pages/PurchaseManagementPage';
 import SalesManagementPage from './pages/SalesManagementPage';
 import ReportsPage from './pages/ReportsPage';
 import UserManagementPage from './pages/UserManagementPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import EmployeeSalaryPage from './pages/EmployeeSalaryPage';
 
 const AppRoutes = () => {
   return (
     <Routes>
-      {/* Public Routes */}
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
-
-      {/* Protected Routes */}
       <Route path="/" element={<ProtectedRoute />}>
         <Route path="dashboard" element={<DashboardPage />} />
         <Route path="inventory" element={<InventoryPage />} />
@@ -34,6 +28,7 @@ const AppRoutes = () => {
         <Route path="sales" element={<SalesManagementPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="users" element={<UserManagementPage />} />
+        <Route path="employee-salaries" element={<EmployeeSalaryPage />} />
 
         {/* Default Protected Route */}
         <Route index element={<DashboardPage />} />

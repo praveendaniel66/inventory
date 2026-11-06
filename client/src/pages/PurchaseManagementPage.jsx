@@ -5,8 +5,7 @@ import Table from '../components/common/Table';
 import Alert from '../components/common/Alert';
 import PurchaseOrderForm from '../components/purchases/PurchaseOrderForm';
 import GRNForm from '../components/purchases/GRNForm';
-// Assuming you have an API utility for purchase orders
-// import { getPurchaseOrders } from '../../api/api'; 
+import { getPurchaseOrders } from '../api/api';
 
 const PurchaseManagementPage = () => {
   const [purchaseOrders, setPurchaseOrders] = useState([]);
@@ -19,25 +18,8 @@ const PurchaseManagementPage = () => {
   const fetchPurchaseOrders = async () => {
     try {
       setLoading(true);
-      // Placeholder for an API call to get all purchase orders
-      // const data = await getPurchaseOrders();
-      const mockData = [
-          { 
-            _id: 'po-101', 
-            supplier: { name: 'Supplier A' }, 
-            status: 'Pending', 
-            total: 500.00, 
-            date: new Date().toISOString() 
-          },
-          { 
-            _id: 'po-102', 
-            supplier: { name: 'Supplier B' }, 
-            status: 'Received', 
-            total: 750.00, 
-            date: new Date().toISOString() 
-          },
-      ];
-      setPurchaseOrders(mockData);
+      const data = await getPurchaseOrders();
+      setPurchaseOrders(data.map((order) => ({ ...order, supplier: { name: order.supplier?.name || order.supplier || 'Farm machinery supplier' }, total: order.total || order.totalAmount || 0 })));
       setError(null);
     } catch (err) {
       console.error('Error fetching purchase orders:', err);

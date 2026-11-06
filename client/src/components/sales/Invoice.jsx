@@ -23,9 +23,9 @@ const Invoice = ({ salesOrder }) => {
       </div>
       <Table columns={columns} data={salesOrder.items} />
       <div className="invoice-footer">
-        <p><strong>Subtotal:</strong> ${salesOrder.subtotal}</p>
-        <p><strong>Tax:</strong> ${salesOrder.tax}</p>
-        <p><strong>Total:</strong> ${salesOrder.total}</p>
+        <p><strong>Subtotal:</strong> ₹{Number(salesOrder.subtotal || 0).toLocaleString('en-IN')}</p>
+        <p><strong>Tax:</strong> ₹{Number(salesOrder.tax || 0).toLocaleString('en-IN')}</p>
+        <p><strong>Total:</strong> ₹{Number(salesOrder.total || salesOrder.totalAmount || 0).toLocaleString('en-IN')}</p>
       </div>
     </div>
   );

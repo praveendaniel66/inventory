@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import Alert from '../common/Alert';
 import Modal from '../common/Modal';
-// Assuming you have an API utility for making requests
-// import { addSupplier, updateSupplier } from '../../api/api'; 
+import { createSupplier, updateSupplier } from '../../api/api';
 
 const SupplierForm = ({ supplierData = null, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -39,13 +38,9 @@ const SupplierForm = ({ supplierData = null, onClose, onSave }) => {
 
     try {
       if (isEditing) {
-        // Placeholder for an API call to update a supplier
-        console.log('Updating supplier:', formData);
-        // await updateSupplier(supplierData._id, formData);
+        await updateSupplier(supplierData._id, formData);
       } else {
-        // Placeholder for an API call to add a new supplier
-        console.log('Adding new supplier:', formData);
-        // await addSupplier(formData);
+        await createSupplier(formData);
       }
       onSave(); // Call the parent component's save handler
       onClose();

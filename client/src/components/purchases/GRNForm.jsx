@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Alert from '../common/Alert';
 import Modal from '../common/Modal';
 import Table from '../common/Table';
-// Assuming you have an API utility for making requests
-// import { getPurchaseOrder, processGRN } from '../../api/api';
+import { getPurchaseOrder, processGRN } from '../../api/api';
 
 const GRNForm = ({ purchaseOrderId, onClose, onProcess }) => {
   const [purchaseOrder, setPurchaseOrder] = useState(null);
@@ -16,21 +15,13 @@ const GRNForm = ({ purchaseOrderId, onClose, onProcess }) => {
     const fetchPurchaseOrder = async () => {
       try {
         setLoading(true);
-        // Placeholder for an API call to get a specific purchase order
-        // const po = await getPurchaseOrder(purchaseOrderId);
-        const mockPO = {
-          _id: 'po-123',
-          supplier: { name: 'Supplier A' },
-          items: [
-            { _id: 'item-1', name: 'Product X', sku: 'X-101', quantity: 50 },
-            { _id: 'item-2', name: 'Product Y', sku: 'Y-202', quantity: 100 },
-          ],
-          status: 'Pending',
-        };
-        setPurchaseOrder(mockPO);
+        const po = await getPurchaseOrder(purchaseOrderId);
+        if (!po) throw new Error('Purchase order not found.');
+        const normalizedOrder = { ...po, supplier: { name: po.supplier?.name || po.supplier || 'Supplier' }, items: (po.items || []).map((item, index) => ({ ...item, _id: item._id || `${po._id}-item-${index}` })) };
+        setPurchaseOrder(normalizedOrder);
 
         const initialReceived = {};
-        mockPO.items.forEach(item => {
+        normalizedOrder.items.forEach(item => {
           initialReceived[item._id] = item.quantity;
         });
         setReceivedItems(initialReceived);
@@ -57,15 +48,8 @@ const GRNForm = ({ purchaseOrderId, onClose, onProcess }) => {
     setProcessing(true);
     setError(null);
 
-    const grnData = {
-      purchaseOrderId,
-      receivedItems,
-    };
-
     try {
-      // Placeholder for an API call to process the GRN and update stock
-      console.log('Processing GRN:', grnData);
-      // await processGRN(grnData);
+      await processGRN(purchaseOrderId, receivedItems);
       onProcess();
       onClose();
     } catch (err) {

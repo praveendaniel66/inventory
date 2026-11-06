@@ -4,8 +4,7 @@ import Sidebar from '../components/common/Sidebar';
 import Alert from '../components/common/Alert';
 import Table from '../components/common/Table';
 import SupplierForm from '../components/suppliers/SupplierForm';
-// Assuming you have an API utility for supplier data
-// import { getSuppliers } from '../../api/api'; 
+import { getSuppliers } from '../api/api';
 
 const SuppliersPage = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -17,13 +16,7 @@ const SuppliersPage = () => {
   const fetchSuppliers = async () => {
     try {
       setLoading(true);
-      // Placeholder for an API call to get all suppliers
-      // const data = await getSuppliers();
-      const mockData = [
-          { _id: '1', name: 'Supplier A', contactPerson: 'Joe Black', email: 'joe.b@supplierA.com' },
-          { _id: '2', name: 'Supplier B', contactPerson: 'Jane Doe', email: 'jane.d@supplierB.com' },
-      ];
-      setSuppliers(mockData);
+      setSuppliers(await getSuppliers());
       setError(null);
     } catch (err) {
       console.error('Error fetching suppliers:', err);

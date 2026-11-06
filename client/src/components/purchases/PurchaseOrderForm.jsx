@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Alert from '../common/Alert';
 import Modal from '../common/Modal';
 import Table from '../common/Table';
-// Assuming you have an API utility for making requests
-// import { createPurchaseOrder, getSuppliers, getProducts } from '../../api/api';
+import { createPurchaseOrder, getSuppliers, getProducts } from '../../api/api';
 
 const PurchaseOrderForm = ({ onClose, onCreate }) => {
   const [supplierId, setSupplierId] = useState('');
@@ -13,28 +12,12 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // In a real app, you would fetch suppliers and products here
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const suppliersData = await getSuppliers();
-  //     const productsData = await getProducts();
-  //     setSuppliers(suppliersData);
-  //     setProducts(productsData);
-  //   };
-  //   fetchData();
-  // }, []);
-
-  const handleAddItem = (e) => {
-    e.preventDefault();
-    const productId = e.target.product.value;
-    const quantity = parseInt(e.target.quantity.value, 10);
-    const product = products.find(p => p._id === productId);
-
-    if (product && quantity > 0) {
-      setOrderItems(prevItems => [...prevItems, { productId, quantity, name: product.name, sku: product.sku }]);
-      e.target.reset();
-    }
-  };
+  useEffect(() => {
+    Promise.all([getSuppliers(), getProducts()]).then(([suppliersData, productsData]) => {
+      setSuppliers(suppliersData);
+      setProducts(productsData);
+    }).catch((err) => setError(err.message || 'Unable to load order options.'));
+  }, []);
 
   const handleRemoveItem = (index) => {
     setOrderItems(prevItems => prevItems.filter((_, i) => i !== index));
@@ -57,9 +40,7 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
     };
 
     try {
-      // Placeholder for an API call to create a purchase order
-      console.log('Creating new purchase order:', newPurchaseOrder);
-      // await createPurchaseOrder(newPurchaseOrder);
+      await createPurchaseOrder({ ...newPurchaseOrder, supplier: suppliers.find((supplier) => supplier._id === supplierId)?.name, totalAmount: orderItems.reduce((sum, item) => sum + Number(item.price || 0) * item.quantity, 0) });
       onCreate();
       onClose();
     } catch (err) {
@@ -104,7 +85,7 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
 
         <div className="form-section">
           <h4>Order Items</h4>
-          <form onSubmit={handleAddItem} className="inline-form">
+          <div className="inline-form">
             <select name="product" className="form-input-inline" required>
               <option value="">Select a product</option>
               {products.map(product => (
@@ -119,8 +100,21 @@ const PurchaseOrderForm = ({ onClose, onCreate }) => {
               min="1"
               required
             />
-            <button type="submit" className="btn btn-secondary">Add Item</button>
-          </form>
+            <button type="button" className="btn btn-secondary" onClick={(event) => {
+              const container = event.currentTarget.parentElement;
+              const productId = container.querySelector('[name="product"]').value;
+              const quantity = parseInt(container.querySelector('[name="quantity"]').value, 10);
+              const product = products.find((item) => item._id === productId);
+              if (!product || !quantity || quantity <= 0) {
+                setError('Select a product and enter a quantity greater than zero.');
+                return;
+              }
+              setOrderItems((items) => [...items, { productId, quantity, name: product.name, sku: product.sku, price: product.costPrice || product.price || 0 }]);
+              container.querySelector('[name="product"]').value = '';
+              container.querySelector('[name="quantity"]').value = '';
+              setError(null);
+            }}>Add item</button>
+          </div>
           {orderItems.length > 0 && (
             <Table columns={itemColumns} data={itemsWithActions} />
           )}

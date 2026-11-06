@@ -10,7 +10,7 @@ const Modal = ({ show, title, children, onClose }) => {
       <div className="modal-container" onClick={e => e.stopPropagation()}>
         <div className="modal-header">
           <h4 className="modal-title">{title}</h4>
-          <button className="modal-close-btn" onClick={onClose}>&times;</button>
+          <button type="button" className="modal-close-btn" onClick={onClose} aria-label="Close dialog">&times;</button>
         </div>
         <div className="modal-body">
           {children}

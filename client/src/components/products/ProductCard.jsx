@@ -14,7 +14,7 @@ const ProductCard = ({ product, onEdit }) => {
       <div className="card-content">
         <h4 className="card-title">{product.name}</h4>
         <p className="card-info">SKU: {product.sku}</p>
-        <p className="card-info">Price: ${product.price}</p>
+        <p className="card-info">Price: ₹{Number(product.price || 0).toLocaleString('en-IN')}</p>
         <p className="card-info">In Stock: {product.currentStock}</p>
       </div>
       <div className="card-actions">

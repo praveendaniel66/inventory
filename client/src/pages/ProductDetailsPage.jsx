@@ -5,8 +5,7 @@ import Sidebar from '../components/common/Sidebar';
 import Alert from '../components/common/Alert';
 import Table from '../components/common/Table';
 import ProductVariantForm from '../components/products/ProductVariantForm';
-// Assuming you have an API utility for product data
-// import { getProductDetails } from '../../api/api'; 
+import { getProducts } from '../api/api';
 
 const ProductDetailsPage = () => {
   const { productId } = useParams(); // Get product ID from URL params
@@ -19,20 +18,9 @@ const ProductDetailsPage = () => {
   const fetchProductDetails = async () => {
     try {
       setLoading(true);
-      // Placeholder for an API call to get product details
-      // const data = await getProductDetails(productId);
-      const mockData = {
-        _id: '1',
-        name: 'Product A',
-        sku: 'A-123',
-        price: 19.99,
-        description: 'A brief description of product A.',
-        variants: [
-          { _id: 'v1', variantName: 'Red', sku: 'A-123-R', price: 19.99, currentStock: 10 },
-          { _id: 'v2', variantName: 'Blue', sku: 'A-123-B', price: 20.99, currentStock: 15 },
-        ]
-      };
-      setProduct(mockData);
+      const data = (await getProducts()).find((item) => item._id === productId);
+      if (!data) throw new Error('Product not found.');
+      setProduct(data);
       setError(null);
     } catch (err) {
       console.error('Error fetching product details:', err);
@@ -110,7 +98,7 @@ const ProductDetailsPage = () => {
         <div className="product-details-summary card">
           <h4>Product Information</h4>
           <p><strong>SKU:</strong> {product?.sku}</p>
-          <p><strong>Price:</strong> ${product?.price}</p>
+          <p><strong>Price:</strong> ₹{Number(product?.price || 0).toLocaleString('en-IN')}</p>
           <p><strong>Description:</strong> {product?.description}</p>
         </div>
 
@@ -121,8 +109,8 @@ const ProductDetailsPage = () => {
           </button>
         </div>
 
-        {product?.variants.length > 0 ? (
-          <Table columns={variantColumns} data={product?.variants} />
+        {(product?.variants || []).length > 0 ? (
+          <Table columns={variantColumns} data={product?.variants || []} />
         ) : (
           <Alert type="info" message="No variants for this product." />
         )}

@@ -3,8 +3,7 @@ import Header from '../components/common/Header';
 import Sidebar from '../components/common/Sidebar';
 import Alert from '../components/common/Alert';
 import Table from '../components/common/Table';
-// Assuming you have an API utility for user management
-// import { getUsers, updateUserRole } from '../../api/api'; 
+import { getUsers, updateUserRole } from '../api/api';
 
 const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
@@ -14,13 +13,7 @@ const UserManagementPage = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      // Placeholder for an API call to get all users
-      // const data = await getUsers();
-      const mockData = [
-          { _id: 'u-1', name: 'Admin User', email: 'admin@example.com', role: 'admin' },
-          { _id: 'u-2', name: 'Regular User', email: 'user@example.com', role: 'user' },
-      ];
-      setUsers(mockData);
+      setUsers(await getUsers());
       setError(null);
     } catch (err) {
       console.error('Error fetching users:', err);
@@ -36,9 +29,7 @@ const UserManagementPage = () => {
   
   const handleRoleChange = async (userId, newRole) => {
     try {
-      // Placeholder for an API call to update user role
-      console.log(`Updating user ${userId} to role: ${newRole}`);
-      // await updateUserRole(userId, { role: newRole });
+      await updateUserRole(userId, { role: newRole });
       fetchUsers(); // Refresh the user list
     } catch (err) {
       console.error('Error updating user role:', err);

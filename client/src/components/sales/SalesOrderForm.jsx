@@ -1,17 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import Header from '../common/Header';
-import Sidebar from '../common/Sidebar';
 import Alert from '../common/Alert';
 import Table from '../common/Table';
 import { useCustomers } from '../../context/CustomerContext';
 import { useProducts } from '../../context/ProductContext';
-import { useAuth } from '../../context/AuthContext';
 import { createSalesOrder } from '../../api/api'; // ✅ FIXED: Use direct API call
+import Modal from '../common/Modal';
 
-const SalesOrderForm = () => {
+const SalesOrderForm = ({ onClose, onCreate }) => {
   const { customers, fetchCustomers } = useCustomers();
   const { products, fetchProducts } = useProducts();
-  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     customer: '',
@@ -85,7 +82,9 @@ const SalesOrderForm = () => {
 
     const salesOrder = {
       ...formData,
+      customer: customers.find((customer) => customer._id === formData.customer)?.name || formData.customer,
       items: orderItems,
+      totalAmount: orderItems.reduce((sum, item) => sum + Number(item.unitPrice || 0) * item.quantity, 0),
     };
 
     try {
@@ -94,6 +93,8 @@ const SalesOrderForm = () => {
       setFormData({ customer: '', status: 'Pending' });
       setOrderItems([]);
       setError('');
+      if (onCreate) onCreate();
+      if (onClose) onClose();
     } catch (err) {
       setError(err.message || 'Failed to create sales order.');
     }
@@ -123,12 +124,8 @@ const SalesOrderForm = () => {
   }));
 
   return (
-    <>
-      <Header />
-      <div className="main-layout">
-        <Sidebar />
-        <main className="main-content">
-          <h2>Create Sales Order</h2>
+    <Modal show title="Create sales order" onClose={onClose}>
+      <div>
 
           {error && <Alert type="error" message={error} />}
           {successMessage && <Alert type="success" message={successMessage} />}
@@ -168,7 +165,7 @@ const SalesOrderForm = () => {
 
             <div className="form-section">
               <h4>Order Items</h4>
-              <form className="inline-form" onSubmit={handleAddItem}>
+              <div className="inline-form">
                 <select name="product" className="form-input-inline" required>
                   <option value="">Select a product</option>
                   {products.map(product => (
@@ -185,10 +182,17 @@ const SalesOrderForm = () => {
                   min="1"
                   required
                 />
-                <button type="submit" className="btn btn-secondary">
-                  Add Item
+                <button type="button" className="btn btn-secondary" onClick={(event) => {
+                  const container = event.currentTarget.parentElement;
+                  const product = container.querySelector('[name="product"]').value;
+                  const quantity = parseInt(container.querySelector('[name="quantity"]').value, 10);
+                  handleAddItem({ preventDefault: () => {}, target: { product: { value: product }, quantity: { value: quantity } } });
+                  container.querySelector('[name="product"]').value = '';
+                  container.querySelector('[name="quantity"]').value = '';
+                }}>
+                  Add item
                 </button>
-              </form>
+              </div>
 
               {orderItems.length > 0 && (
                 <Table columns={itemColumns} data={itemsWithActions} />
@@ -201,9 +205,8 @@ const SalesOrderForm = () => {
               </button>
             </div>
           </form>
-        </main>
       </div>
-    </>
+    </Modal>
   );
 };
 

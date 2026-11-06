@@ -6,7 +6,7 @@ import Table from '../components/common/Table';
 import StockAdjustmentForm from '../components/inventory/StockAdjustmentForm';
 import ProductForm from '../components/products/ProductForm';
 import SearchFilterSort from '../components/ui/SearchFilterSort';
-import { getProducts, getLowStockProducts, getExpiringProducts, exportInventory } from '../api/api'; 
+import { getProducts, getLowStockProducts, getExpiringProducts, exportInventory, adjustStock } from '../api/api'; 
 
 const InventoryPage = () => {
   const [inventory, setInventory] = useState([]);
@@ -79,7 +79,8 @@ const InventoryPage = () => {
     setSelectedProduct(null);
   };
 
-  const handleSaveAdjustment = () => {
+  const handleSaveAdjustment = async ({ productId, adjustment }) => {
+    await adjustStock(productId, { adjustment });
     fetchInventory();
   };
 
@@ -211,7 +212,7 @@ const InventoryPage = () => {
           </div>
           <div className="dashboard-card">
             <h3>Total Value</h3>
-            <p className="value">${inventory.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString()}</p>
+            <p className="value">₹{inventory.reduce((sum, item) => sum + (item.quantity * item.price), 0).toLocaleString('en-IN')}</p>
             <p className="change">Current stock value</p>
           </div>
         </div>
