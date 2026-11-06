@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Alert from '../common/Alert';
 import Modal from '../common/Modal';
-import { createProduct, updateProduct, getCategories, getSuppliers, getWarehouses } from '../../api/api';
+import { createProduct, updateProduct, getCategories, getSuppliers } from '../../api/api';
 
 const ProductForm = ({ productData = null, onClose, onSave }) => {
   const [formData, setFormData] = useState({
@@ -40,7 +40,6 @@ const ProductForm = ({ productData = null, onClose, onSave }) => {
 
   const [categories, setCategories] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
-  const [warehouses, setWarehouses] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const [newTag, setNewTag] = useState('');
@@ -50,14 +49,12 @@ const ProductForm = ({ productData = null, onClose, onSave }) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [categoriesData, suppliersData, warehousesData] = await Promise.all([
+        const [categoriesData, suppliersData] = await Promise.all([
           getCategories(),
-          getSuppliers(),
-          getWarehouses()
+          getSuppliers()
         ]);
         setCategories(categoriesData);
         setSuppliers(suppliersData);
-        setWarehouses(warehousesData);
       } catch (err) {
         console.error('Error fetching form data:', err);
       }

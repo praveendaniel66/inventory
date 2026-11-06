@@ -7,7 +7,6 @@ import Alert from '../components/common/Alert';
 
 const ReportsPage = () => {
   const [reportType, setReportType] = useState('stock-summary'); // 'stock-summary' or 'sales-report'
-  const [error, setError] = useState(null);
 
   const handleReportChange = (e) => {
     setReportType(e.target.value);
@@ -30,8 +29,6 @@ const ReportsPage = () => {
       <Sidebar />
       <main className="content-area">
         <h2 className="page-heading">Business Reports</h2>
-        {error && <Alert type="error" message={error} />}
-
         <div className="report-selector-container">
           <label htmlFor="report-type">Select Report:</label>
           <select id="report-type" className="form-input-select" value={reportType} onChange={handleReportChange}>

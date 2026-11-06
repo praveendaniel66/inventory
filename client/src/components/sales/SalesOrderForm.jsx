@@ -22,6 +22,8 @@ const SalesOrderForm = ({ onClose, onCreate }) => {
   useEffect(() => {
     fetchCustomers();
     fetchProducts();
+    // Context fetch methods are stable for this one-time form initialization.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleInputChange = e => {

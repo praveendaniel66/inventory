@@ -1,6 +1,6 @@
 {
-  "short_name": "Inventory App",
-  "name": "Inventory Management System",
+  "short_name": "TWS Inventory",
+  "name": "TWS Inventory Management",
   "icons": [
     {
       "src": "favicon.ico",
@@ -10,6 +10,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#1e293b",
+  "background_color": "#f1f5f9"
 }

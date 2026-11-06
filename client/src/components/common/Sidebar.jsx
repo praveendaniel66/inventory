@@ -33,7 +33,7 @@ const Sidebar = () => {
         <div className="sidebar-brand">
           <span className="brand-mark"><BarChart3 size={19} strokeWidth={2.5} /></span>
           <div>
-            <h2 className="sidebar-title">Stockwise</h2>
+            <h2 className="sidebar-title">TWS Inventory</h2>
             <span className="sidebar-kicker">Operations hub</span>
           </div>
         </div>

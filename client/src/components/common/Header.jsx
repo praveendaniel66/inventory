@@ -21,7 +21,7 @@ const Header = () => {
       <div className="header-brand">
         <Link to="/" className="brand-link">
           <span className="mobile-brand-mark">S</span>
-          <span>Stockwise</span>
+          <span>TWS Inventory Management</span>
         </Link>
       </div>
       <nav className="header-nav">

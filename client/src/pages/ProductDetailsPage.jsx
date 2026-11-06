@@ -34,6 +34,8 @@ const ProductDetailsPage = () => {
     if (productId) {
       fetchProductDetails();
     }
+    // Product details are loaded when the route parameter changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [productId]);
 
   const handleAddVariant = () => {
